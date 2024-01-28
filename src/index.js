@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 import { parseArgs } from "node:util"
 import fs from "node:fs"
-import chalk from 'chalk';
+import chalk from 'chalk'
 import * as espree from "espree"
+import path from "path"
+import { Reporter } from "./reporter.js"
 
 function getFilePathFromCLI() {
   try {
@@ -25,6 +27,7 @@ function getFilePathFromCLI() {
 }
 
 const filePath = getFilePathFromCLI();
+const outputFilePath = path.resolve(process.cwd(), `${path.basename(filePath, '.js')}.linted.js`);
 const code = fs.readFileSync(filePath, 'utf-8');
 const ast = espree.parse(code, { 
   ecmaVersion: 2020,
@@ -32,4 +35,11 @@ const ast = espree.parse(code, {
   sourceType: 'module'
 });
 
-console.log(JSON.stringify(ast, null, 2))
+Reporter.report({
+  errors: [{
+    message: "Missing semicolon",
+    errorLocation: "error.js:1:1"
+  }],
+  ast,
+  outputFilePath
+})
