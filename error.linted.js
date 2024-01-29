@@ -1,7 +1,7 @@
 let text = 'abc123' + 'cde9982';
-var neverReassigned = {};
+const neverReassigned = {};
 neverReassigned.name = 'luisao oooo';
-var toBeReassigned = {};
+let toBeReassigned = {};
 toBeReassigned = {
   name: 'ana 1'
 };
