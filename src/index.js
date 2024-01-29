@@ -5,6 +5,7 @@ import chalk from 'chalk'
 import * as espree from "espree"
 import path from "path"
 import { Reporter } from "./reporter.js"
+import { SyntaxTreeProcessor } from "./syntaxTreeProcessor.js"
 
 function getFilePathFromCLI() {
   try {
@@ -35,11 +36,11 @@ const ast = espree.parse(code, {
   sourceType: 'module'
 });
 
+const syntaxTreeProcessor = new SyntaxTreeProcessor(filePath);
+const errors = syntaxTreeProcessor.process(ast);
+
 Reporter.report({
-  errors: [{
-    message: "Missing semicolon",
-    errorLocation: "error.js:1:1"
-  }],
+  errors,
   ast,
   outputFilePath
 })
