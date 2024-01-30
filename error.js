@@ -12,3 +12,5 @@ let result = text.split(",").map(l => {
   return l.toUpperCase()
 }).join(".")
 console.log(result)
+
+text = "123";

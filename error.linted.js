@@ -10,7 +10,8 @@ toBeReassigned = 1;
 toBeReassigned = {
   name: 'ana 2'
 };
-let result = text.split(',').map(l => {
+const result = text.split(',').map(l => {
   return l.toUpperCase();
 }).join('.');
 console.log(result);
+text = '123';

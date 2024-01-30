@@ -43,6 +43,21 @@ export class SyntaxTreeProcessor {
     }
   }
 
+  #checkDeclarationsThatNeverChanged() {
+    [...this.#variables.values()]
+      .filter(({ stage, nodeDeclaration }) => 
+        stage === this.#stages.declaration && 
+        nodeDeclaration.kind !== this.#variableKinds.const
+      )
+      .forEach(({ nodeDeclaration }) => {
+        this.#storeError(
+          this.#messages.useConst(nodeDeclaration.kind),
+          nodeDeclaration.loc.start,
+        )
+        nodeDeclaration.kind = this.#variableKinds.const;
+      })
+  }
+
   #handleLiteral(node) {
     if (!(node.raw && typeof node.raw === 'string')) return;
 
@@ -75,6 +90,7 @@ export class SyntaxTreeProcessor {
 
     const variable = this.#variables.get(varName);
     const { nodeDeclaration, originalKind, stage } = variable;
+    
     // changing an object property from a variable - Ex: object.name = "changed"
     if (stage === this.#stages.declaration && expression.left.type === "MemberExpression") {
       if (this.#variableKinds.const === originalKind) return;
@@ -122,6 +138,7 @@ export class SyntaxTreeProcessor {
    */
   process(ast) {
     this.#traverse(ast);
+    this.#checkDeclarationsThatNeverChanged();
     return [...this.#errors.values()];
   }
 }
