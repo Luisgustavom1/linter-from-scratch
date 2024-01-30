@@ -31,7 +31,7 @@ const filePath = getFilePathFromCLI();
 const outputFilePath = path.resolve(process.cwd(), `${path.basename(filePath, '.js')}.linted.js`);
 const code = fs.readFileSync(filePath, 'utf-8');
 const ast = espree.parse(code, { 
-  ecmaVersion: 2020,
+  ecmaVersion: 2022,
   loc: true,
   sourceType: 'module'
 });
